@@ -78,6 +78,23 @@
 		        </fileset>
         	</jar>
 	</target>
+   	<target name="junittest.compile">
+    		<javac destdir="${bin.dir}" 
+    			nowarn="${build.compiler.nowarn}" 
+        	     	debug="${build.compiler.compile.with.debug}">
+			<src path="${absolute.junittest.src.dir}"/>
+			<classpath>
+				<path refid="classpath.junittest"/>
+			</classpath>
+		</javac>
+
+		<copy todir="${absolute.junittest.build.classes.dir}">
+			<fileset dir="${absolute.junittest.src.dir}">
+				<include name="**/*.ear"/>
+			</fileset>	
+		</copy>
+	</target>
+
 	<target name="junit.run.tests" depends="compile" description="run tests">
 		    	
 		<junit printsummary="yes" haltonfailure="no">
@@ -90,12 +107,14 @@
 
 			<batchtest fork="yes" todir="${absolute.junittest.data.dir}" 
 			           failureproperty="junitfailed">
-				<fileset dir="${absolute.junittest.build.classes.dir}">
+				<fileset dir="${dir.src}">
 					<include name="**/*Test*.class"/>
 				</fileset>
 			</batchtest>
 			
 		</junit>
+	</target>
+
 		
 	
 	<target name="clean"
