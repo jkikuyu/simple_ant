@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="ant_all_in_one_basic" basedir="." default="info"> 
+<project name="ant_all_in_one_basic" basedir=".." default="info"> 
 	
 	<property file="run.properties"/>
 	
@@ -7,6 +7,7 @@
 	<property name="dir.src" value="src"/>
 	<property name="dir.classes" value="classes"/>
 	<property name="dir.dist" value="dist"/>
+	<property name = "absolute.junittest.build.classes.dir" value = "src/test/java"/>
 	
 	
 	
@@ -21,7 +22,7 @@
 		<echo>Type ant -p to see a list of ant targets</echo>
 	</target>
 	
-	<target name="make.lib.dir">
+	<target name="make.lib.dir" description ="make lib dir">
 		<mkdir dir="${dir.lib}"/>
 	</target>
 	
@@ -77,6 +78,25 @@
 		        </fileset>
         	</jar>
 	</target>
+	<target name="junit.run.tests" depends="compile" description="run tests">
+		    	
+		<junit printsummary="yes" haltonfailure="no">
+
+			<sysproperty key="log4j.configuration" 
+				     value="${log4j.configuration}"/>
+
+			<classpath refid="classpath.path" />
+			<formatter type="xml"/>
+
+			<batchtest fork="yes" todir="${absolute.junittest.data.dir}" 
+			           failureproperty="junitfailed">
+				<fileset dir="${absolute.junittest.build.classes.dir}">
+					<include name="**/*Test*.class"/>
+				</fileset>
+			</batchtest>
+			
+		</junit>
+		
 	
 	<target name="clean"
 	        description="clean up">
