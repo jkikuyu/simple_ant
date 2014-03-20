@@ -9,6 +9,10 @@
 	<property name="dir.dist" value="dist"/>
 	<property name="absolute.junittest.data.dir value ="${junit.build.class.dir}/junitdata"/>
 	<property name="junit.build.class.dir value ="tests"/>
+
+
+
+
 	
 	
 	
@@ -23,7 +27,7 @@
 		<echo>Type ant -p to see a list of ant targets</echo>
 	</target>
 	
-	<target name="make.lib.dir">
+	<target name="make.lib.dir" description ="make lib dir">
 		<mkdir dir="${dir.lib}"/>
 	</target>
 	
@@ -94,6 +98,44 @@
 		        </fileset>
         	</jar>
 	</target>
+   	<target name="junittest.compile">
+    		<javac destdir="${bin.dir}" 
+    			nowarn="${build.compiler.nowarn}" 
+        	     	debug="${build.compiler.compile.with.debug}">
+			<src path="${absolute.junittest.src.dir}"/>
+			<classpath>
+				<path refid="classpath.junittest"/>
+			</classpath>
+		</javac>
+
+		<copy todir="${absolute.junittest.build.classes.dir}">
+			<fileset dir="${absolute.junittest.src.dir}">
+				<include name="**/*.ear"/>
+			</fileset>	
+		</copy>
+	</target>
+
+	<target name="junit.run.tests" depends="compile" description="run tests">
+		    	
+		<junit printsummary="yes" haltonfailure="no">
+
+			<sysproperty key="log4j.configuration" 
+				     value="${log4j.configuration}"/>
+
+			<classpath refid="classpath.path" />
+			<formatter type="xml"/>
+
+			<batchtest fork="yes" todir="${absolute.junittest.data.dir}" 
+			           failureproperty="junitfailed">
+				<fileset dir="${dir.src}">
+					<include name="**/*Test*.class"/>
+				</fileset>
+			</batchtest>
+			
+		</junit>
+	</target>
+
+		
 	
 	<target name="clean"
 	        description="clean up">
