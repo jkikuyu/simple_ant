@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="ant_all_in_one_basic" basedir="." default="info"> 
+<project name="ant_all_in_one_basic" basedir=".." default="info"> 
 	
 	<property file="run.properties"/>
 	
@@ -7,6 +7,8 @@
 	<property name="dir.src" value="src"/>
 	<property name="dir.classes" value="classes"/>
 	<property name="dir.dist" value="dist"/>
+	<property name="absolute.junittest.data.dir value ="${junit.build.class.dir}/junitdata"/>
+	<property name="junit.build.class.dir value ="tests"/>
 	
 	
 	
@@ -38,9 +40,9 @@
 	</target>
 	
 	<target name="make.all.dirs" 
-	        depends="make.lib.dir, make.src.dir, make.classes.dir, make.dist.dir"/>
+	        depends="make.lib.dir, make.src.dir, make.classes.dir, make.dist.dir" description="make all folders"/>
 	
-	<target name="compile" depends="make.all.dirs" description="compiles classes">
+	<target name="compile" depends="make.all.dirs" description="make lib folder">
 		<javac destdir="${dir.classes}">
 			<src path="${dir.src}"/>
 			<classpath>
@@ -53,7 +55,22 @@
 			    	<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-	</target>
+		
+		<target name = "junit.run.tests" description = "Run junit tests">
+		<junit printsummary = "yes" haltonfailure ="no">
+			<syproperty key = "log4j.configuration" value ="${log4j.configuration}/>
+			<classpath refid = "classpath.junittest"/>
+				<formalter type ="xml">
+					<batchtest fork = "yes" todir = "${absolute.junittest.data.dir}" failureproperty = "junitfailed">
+			<fileset dir = "${junit.build.class.dir}">
+						include name = "**/*Test*.class"
+	</fileset>
+	</batchtest>
+	</junit>
+			<fail message = "junittest failed IF = junitfailed/>
+	</target>		
+		
+	
 	
 	<target name="create.jar" depends="compile" description="creates jar">
 		<jar destfile="${dir.dist}/${jar.name}">
